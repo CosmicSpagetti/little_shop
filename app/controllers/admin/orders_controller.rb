@@ -4,7 +4,7 @@ class Admin::OrdersController < Admin::BaseController
     @order = Order.find(params[:id])
     @user = @order.user
     @order_items = @order.order_items_for_merchant(@merchant.id)
-
+    @merchant.addresses.new
     render :'/dashboard/orders/show'
   end
 
