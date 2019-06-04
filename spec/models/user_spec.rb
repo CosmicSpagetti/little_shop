@@ -22,12 +22,12 @@ RSpec.describe User, type: :model do
       user = User.create(
         email: "email",
         password: "password",
-        name: "name",
-        address: "address",
+        name: "name"
+      )
+      address = create(:address, address: "address",
         city: "city",
         state: "state",
-        zip: "zip"
-      )
+        zip: "zip", user: user)
       expect(user.role).to eq('default')
       expect(user.default?).to be_truthy
     end
@@ -37,12 +37,12 @@ RSpec.describe User, type: :model do
         email: "email",
         password: "password",
         name: "name",
-        address: "address",
-        city: "city",
-        state: "state",
-        zip: "zip",
         role: 1
       )
+   address = create(:address, address: "address",
+        city: "city",
+        state: "state",
+        zip: "zip", user: user)
       expect(user.role).to eq('merchant')
       expect(user.merchant?).to be_truthy
     end
@@ -52,12 +52,12 @@ RSpec.describe User, type: :model do
         email: "email",
         password: "password",
         name: "name",
-        address: "address",
-        city: "city",
-        state: "state",
-        zip: "zip",
         role: 2
       )
+      address = create(:address, address: "address",
+        city: "city",
+        state: "state",
+        zip: "zip", user: user)
       expect(user.role).to eq('admin')
       expect(user.admin?).to be_truthy
     end
@@ -65,12 +65,18 @@ RSpec.describe User, type: :model do
 
   describe 'instance methods' do
     before :each do
-      @u1 = create(:user, state: "CO", city: "Anywhere")
-      @u2 = create(:user, state: "OK", city: "Tulsa")
-      @u3 = create(:user, state: "IA", city: "Anywhere")
-      u4 = create(:user, state: "IA", city: "Des Moines")
-      u5 = create(:user, state: "IA", city: "Des Moines")
-      u6 = create(:user, state: "IA", city: "Des Moines")
+      @u1 = create(:user) 
+      a1 = create(:address, state: "CO", city: "Anywhere", user: @u1)
+      @u2 = create(:user)
+      a2 = create(:address, state: "OK", city: "Tulsa", user: @u2)
+      @u3 = create(:user)
+      a3 = create(:address, state: "IA", city: "Anywhere", user: @u3)
+      u4 = create(:user)
+      a4 = create(:address, state: "IA", city: "Des Moines", user: u4)
+      u5 = create(:user,)
+      a5 = create(:address, state: "IA", city: "Des Moines", user: u5)
+      u6 = create(:user)
+      a6 = create(:address, state: "IA", city: "Des Moines", user: u6)
 
       @m1 = create(:merchant)
       @i1 = create(:item, merchant_id: @m1.id, inventory: 20)
@@ -199,12 +205,18 @@ RSpec.describe User, type: :model do
 
     describe "statistics" do
       before :each do
-        u1 = create(:user, state: "CO", city: "Fairfield")
-        u2 = create(:user, state: "OK", city: "OKC")
-        u3 = create(:user, state: "IA", city: "Fairfield")
-        u4 = create(:user, state: "IA", city: "Des Moines")
-        u5 = create(:user, state: "IA", city: "Des Moines")
-        u6 = create(:user, state: "IA", city: "Des Moines")
+        u1 = create(:user)
+        a1 = create(:address, state: "CO", city: "Fairfield", user: u1)
+        u2 = create(:user)
+        a2 = create(:address, state: "OK", city: "OKC", user: u2)
+        u3 = create(:user)
+        a3 = create(:address, state: "IA", city: "Fairfield", user: u3)
+        u4 = create(:user)
+        a4 = create(:address, state: "IA", city: "Des Moines", user: u4)
+        u5 = create(:user)
+        a5 = create(:address, state: "IA", city: "Des Moines", user: u5)
+        u6 = create(:user)
+        a6 = create(:address, state: "IA", city: "Des Moines", user: u6)
         @m1, @m2, @m3, @m4, @m5, @m6, @m7 = create_list(:merchant, 7)
         i1 = create(:item, merchant_id: @m1.id)
         i2 = create(:item, merchant_id: @m2.id)
