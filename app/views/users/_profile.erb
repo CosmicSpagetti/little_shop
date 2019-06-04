@@ -4,14 +4,15 @@
   <h2>Order Data</h2>
   <p>Email: <%= @user.email %></p>
   <p>Role: <%= @user.role %></p>
-  <aside id="address-details">
     <h3>Address:</h3>
-    <p><%= @user.address %></p>
-    <p>
-      <%= @user.city %>,
-      <%= @user.state %>
-      <%= @user.zip %>
+  <aside class="address-details">
+    <p><% @user.addresses.each do |address| %></p>
+     <p> <%= address.address %> </p>
+      <%= address.city %>,
+      <%= address.state %>,
+      <%= address.zip %>
     </p>
+    <% end %>
   </aside>
   <p><%= link_to 'Edit Profile Data', edit_profile_path unless current_admin? %></p>
 </section>
