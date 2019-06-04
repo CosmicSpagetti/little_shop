@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190403231217) do
+ActiveRecord::Schema.define(version: 20190603190901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "addresses", force: :cascade do |t|
+    t.string "address"
+    t.string "city"
+    t.string "state"
+    t.string "zip"
+    t.bigint "user_id"
+    t.string "nickname", default: "Home"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_addresses_on_user_id"
+  end
 
   create_table "items", force: :cascade do |t|
     t.string "name"
@@ -45,6 +57,8 @@ ActiveRecord::Schema.define(version: 20190403231217) do
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "address_id"
+    t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -54,19 +68,15 @@ ActiveRecord::Schema.define(version: 20190403231217) do
     t.integer "role", default: 0
     t.boolean "active", default: true
     t.string "name"
-    t.string "address"
-    t.string "city"
-    t.string "state"
-    t.string "zip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["city"], name: "index_users_on_city"
     t.index ["email"], name: "index_users_on_email"
-    t.index ["state"], name: "index_users_on_state"
   end
 
+  add_foreign_key "addresses", "users"
   add_foreign_key "items", "users", column: "merchant_id"
   add_foreign_key "order_items", "items"
   add_foreign_key "order_items", "orders"
+  add_foreign_key "orders", "addresses"
   add_foreign_key "orders", "users"
 end
