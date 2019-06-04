@@ -6,14 +6,17 @@
   <p>Role: <%= @user.role %></p>
     <h3>Address:</h3>
   <aside class="address-details">
-    <p><% @user.addresses.each do |address| %></p>
-     <p> <%= address.address %> </p>
-      <%= address.city %>,
-      <%= address.state %>,
-      <%= address.zip %>
+    <p><% @user.reload.addresses.each do |address| %></p>
+      <p>LOcAtiOn:<%= address.nickname %> 
+     <p>aDdResS: <%= address.address %> </p>
+      <p>cItY: <%= address.city %>,</p>
+     <p>sTatE: <%= address.state %>,</p>
+      <p>zIp: <%= address.zip %></p>
+      
     </p>
     <% end %>
   </aside>
+  <p><%= button_to 'Add Address', new_profile_address_path(@user), method: :get %></p>
   <p><%= link_to 'Edit Profile Data', edit_profile_path unless current_admin? %></p>
 </section>
 
