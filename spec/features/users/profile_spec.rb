@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'user profile', type: :feature do
   before :each do
     @user = create(:user)
-    address = create(:address, user: @user)
+    @address = create(:address, user: @user)
   end
 
   describe 'registered user visits their profile' do
@@ -168,6 +168,69 @@ RSpec.describe 'user profile', type: :feature do
       expect(page).to have_content(address.city)
       expect(page).to have_content(address.state)
       expect(page).to have_content(address.zip)
+    end 
+    it 'can see link to update address' do 
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+
+      visit profile_path(@user)
+
+      within "#address-#{@address.id}" do 
+        expect(page).to have_link("Update Address")
+        click_link "Update Address"
+      end 
+      expect(current_path).to eq(edit_profile_address_path(@address))
+
+      fill_in "address[nickname]", with: "work" 
+      fill_in "address[address]", with: "1223 address"
+      fill_in "address[city]", with: "denver"
+      fill_in "address[state]", with: "CO"
+      fill_in "address[zip]", with: "4444"
+
+      click_on "Update Address"
+
+      expect(current_path).to eq(profile_path(@user))
+      expect(page).to have_content("Home")
+      expect(page).to have_content("work")
+      expect(page).to have_content("1223 address")
+      expect(page).to have_content("denver")
+      expect(page).to have_content("CO")
+      expect(page).to have_content("4444")
+    end 
+    it 'user can delete adddress' do 
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+
+      visit profile_path(@user)
+
+      within "#address-#{@address.id}" do 
+        expect(page).to have_button("Delete Address")
+        click_button "Delete Address"
+      end
+
+      expect(page).to_not have_content(@address.address)
+      expect(page).to_not have_content(@address.city)
+      expect(page).to_not have_content(@address.state)
+      expect(page).to_not have_content(@address.zip)
+    end 
+    it 'user cannot delete address with a completed order' do 
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+
+      order = create(:shipped_order, address: @address, user: @user)
+      @address.reload
+      order.reload
+      @user.reload
+      visit profile_path(@user)
+
+      within "#address-#{@address.id}" do 
+        expect(page).to have_button("Delete Address")
+        click_button "Delete Address"
+      end      
+
+      expect(page).to have_content(@address.address)
+      expect(page).to have_content(@address.city)
+      expect(page).to have_content(@address.state)
+      expect(page).to have_content(@address.zip) 
+
+      expect(page).to have_content("Address tied to packaged/shipped order")
     end 
   end 
 end
