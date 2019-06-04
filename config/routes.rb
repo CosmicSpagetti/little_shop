@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   get '/profile/edit', to: 'users#edit', as: :edit_profile
   patch '/profile/edit', to: 'users#update'
   namespace :profile do
+    resources :addresses, only: [:new, :create]
     resources :orders, only: [:index, :show, :destroy, :create]
   end
 
