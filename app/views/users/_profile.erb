@@ -7,13 +7,16 @@
     <h3>Address:</h3>
   <aside class="address-details">
     <p><% @user.reload.addresses.each do |address| %></p>
-      <p>LOcAtiOn:<%= address.nickname %> 
-     <p>aDdResS: <%= address.address %> </p>
-      <p>cItY: <%= address.city %>,</p>
-     <p>sTatE: <%= address.state %>,</p>
-      <p>zIp: <%= address.zip %></p>
-      
+      <section id="address-<%= address.id %>">
+      <p>Location:<%= address.nickname %> 
+     <p>Address: <%= address.address %> </p>
+      <p>City: <%= address.city %>,</p>
+     <p>State: <%= address.state %>,</p>
+      <p>Zip: <%= address.zip %></p>
+      <p><%= button_to "Delete Address",  profile_address_path(address), method: :delete %>
+     <p><%= link_to "Update Address", edit_profile_address_path(address) %>
     </p>
+      </section>
     <% end %>
   </aside>
   <p><%= button_to 'Add Address', new_profile_address_path(@user), method: :get %></p>
