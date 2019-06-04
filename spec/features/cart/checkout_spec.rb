@@ -5,7 +5,9 @@ include ActionView::Helpers::NumberHelper
 RSpec.describe "Checking out" do
   before :each do
     @merchant_1 = create(:merchant)
+    a1 = create(:address, user: @merchant_1)
     @merchant_2 = create(:merchant)
+    a2 = create(:address, user: @merchant_2)
     @item_1 = create(:item, user: @merchant_1, inventory: 3)
     @item_2 = create(:item, user: @merchant_2)
     @item_3 = create(:item, user: @merchant_2)
@@ -23,6 +25,7 @@ RSpec.describe "Checking out" do
   context "as a logged in regular user" do
     before :each do
       user = create(:user)
+      a1 = create(:address, user: user)
       login_as(user)
       visit cart_path
 
