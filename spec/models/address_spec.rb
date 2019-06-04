@@ -11,4 +11,15 @@ RSpec.describe Address, type: :model do
     it { should belong_to :user }
     it { should have_many :orders }
   end 
+  describe 'instance method' do 
+    it '.check_orders' do 
+      @user = create(:user)
+      @address = create(:address, user: @user)
+
+      create(:shipped_order, address: @address, user: @user)
+
+      expect(@address.check_orders).to eq(true)
+      
+    end 
+  end 
 end 
