@@ -20,6 +20,7 @@ RSpec.describe 'user profile', type: :feature do
           expect(page).to have_content("#{@user.addresses.first.city}")
           expect(page).to have_content("#{@user.addresses.first.state}")
           expect(page).to have_content("#{@user.addresses.first.zip}")
+          expect(page).to have_content("#{@user.addresses.first.nickname}")
         end
         expect(page).to have_link('Edit Profile Data')
       end
@@ -132,5 +133,41 @@ RSpec.describe 'user profile', type: :feature do
 
       expect(page).to have_content("Email has already been taken")
     end
-  end
+  end 
+  describe 'shows button to add address' do 
+    it 'button takes them to new address page' do 
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+      
+      visit profile_path(@user)
+
+      expect(page).to have_button("Add Address")
+      click_button "Add Address"
+      expect(current_path).to eq(new_profile_address_path(@user))
+    end
+    it 'can create new address' do 
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+
+      visit profile_path(@user)
+
+      click_button "Add Address"
+
+      fill_in "address[nickname]", with: "work" 
+      fill_in "address[address]", with: "1223 address"
+      fill_in "address[city]", with: "denver"
+      fill_in "address[state]", with: "CO"
+      fill_in "address[zip]", with: "4444"
+      click_on "Create Address" 
+
+      address = Address.last.reload
+      address.reload
+      @user.reload
+
+      expect(current_path).to eq(profile_path(@user))
+      expect(page).to have_content(address.nickname)
+      expect(page).to have_content(address.address)
+      expect(page).to have_content(address.city)
+      expect(page).to have_content(address.state)
+      expect(page).to have_content(address.zip)
+    end 
+  end 
 end
