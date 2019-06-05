@@ -4,15 +4,22 @@
   <h2>Order Data</h2>
   <p>Email: <%= @user.email %></p>
   <p>Role: <%= @user.role %></p>
-  <aside id="address-details">
     <h3>Address:</h3>
-    <p><%= @user.address %></p>
-    <p>
-      <%= @user.city %>,
-      <%= @user.state %>
-      <%= @user.zip %>
+  <aside class="address-details">
+    <p><% @user.reload.addresses.each do |address| %></p>
+      <section id="address-<%= address.id %>">
+      <p>Location:<%= address.nickname %> 
+     <p>Address: <%= address.address %> </p>
+      <p>City: <%= address.city %>,</p>
+     <p>State: <%= address.state %>,</p>
+      <p>Zip: <%= address.zip %></p>
+      <p><%= button_to "Delete Address",  profile_address_path(address), method: :delete %>
+     <p><%= link_to "Update Address", edit_profile_address_path(address) %>
     </p>
+      </section>
+    <% end %>
   </aside>
+  <p><%= button_to 'Add Address', new_profile_address_path(@user), method: :get %></p>
   <p><%= link_to 'Edit Profile Data', edit_profile_path unless current_admin? %></p>
 </section>
 

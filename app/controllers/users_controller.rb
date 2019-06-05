@@ -3,6 +3,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    @user.addresses.new
   end
 
   def show
@@ -11,6 +12,7 @@ class UsersController < ApplicationController
 
   def edit
     @user = current_user
+    @address = @user.addresses.first
   end
 
   def create
@@ -41,7 +43,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:name, :address, :city, :state, :zip, :email, :password, :password_confirmation)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, addresses_attributes: [:address, :city, :state, :zip]) 
   end
 
   def user_update_params

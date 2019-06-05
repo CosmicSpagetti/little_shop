@@ -5,7 +5,9 @@ include ActionView::Helpers::NumberHelper
 RSpec.describe "Checking out" do
   before :each do
     @merchant_1 = create(:merchant)
+    a1 = create(:address, user: @merchant_1)
     @merchant_2 = create(:merchant)
+    a2 = create(:address, user: @merchant_2)
     @item_1 = create(:item, user: @merchant_1, inventory: 3)
     @item_2 = create(:item, user: @merchant_2)
     @item_3 = create(:item, user: @merchant_2)
@@ -19,10 +21,46 @@ RSpec.describe "Checking out" do
     visit item_path(@item_3)
     click_on "Add to Cart"
   end
+  context 'when you checkout as a user' do 
+    it 'should let you pick an address for the order' do 
+      user = create(:user)
+      a1 = create(:address, user: user)
+      a2 = create(:address, user: user)
 
+      login_as(user)
+      visit cart_path(user)
+
+      expect(page).to have_content(a1.nickname)
+      expect(page).to have_content(a1.address)
+      expect(page).to have_content(a2.nickname)
+      expect(page).to have_content(a2.address)
+
+      within "#address-#{a2.id}" do 
+        click_on "Check Out"
+      end 
+      new_order = Order.last 
+
+      expect(new_order.address).to eq(a2)
+    end 
+  end
+  context "if user has no addresses" do 
+    it 'should see link to create address' do 
+
+      user = create(:user)
+
+      login_as(user)
+      visit cart_path
+
+      expect(page).to have_link("Create Address")
+      click_link "Create Address"
+
+      expect(current_path).to eq(new_profile_address_path(user))
+    end 
+  end 
   context "as a logged in regular user" do
     before :each do
       user = create(:user)
+      a1 = create(:address, user: user)
       login_as(user)
       visit cart_path
 

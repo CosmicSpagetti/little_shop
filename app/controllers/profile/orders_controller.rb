@@ -30,8 +30,23 @@ class Profile::OrdersController < ApplicationController
     end
   end
 
+  def update
+    @order = Order.find(params[:id])
+    idk_address = @order.user.addresses.last
+    new_address = { :address_id => idk_address.id}
+    @order.update(new_address)
+    if @order.save 
+      flash[:success] = "YoU ChaNgeD yOur adDreSs!"
+      redirect_to profile_orders_path
+    else
+      flash.now[:danger] = "Failed"
+      render :show
+    end
+  end
+
   def create
-    order = Order.create(user: current_user, status: :pending)
+    address = Address.find(params[:format])
+    order = Order.create!(user: current_user, status: :pending, address: address)
     cart.items.each do |item, quantity|
       order.order_items.create(item: item, quantity: quantity, price: item.price)
     end

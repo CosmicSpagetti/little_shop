@@ -1,0 +1,13 @@
+<%= form_for [@user, @address], url: profile_address_path(@address) do |f| %>
+  <%= f.label :nickname %> 
+  <%= f.text_field :nickname, required: true %>  
+  <%= f.label :address %> 
+  <%= f.text_field :address, required: true %> 
+  <%= f.label :city %> 
+  <%= f.text_field :city, required: true %> 
+  <%= f.label :state %> 
+  <%= f.text_field :state, required: true %> 
+  <%= f.label :zip %> 
+  <%= f.text_field :zip, required: true %> 
+  <%= f.submit %>
+<% end %>

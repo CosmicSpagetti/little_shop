@@ -3,7 +3,9 @@ require 'rails_helper'
 RSpec.describe 'merchant dashboard' do
   before :each do
     @merchant = create(:merchant)
+    a1 = create(:address, user: @merchant)
     @admin = create(:admin)
+    a2 = create(:address, user: @admin)
     @i1, @i2 = create_list(:item, 2, user: @merchant)
     @o1, @o2 = create_list(:order, 2)
     @o3 = create(:shipped_order)
@@ -29,10 +31,10 @@ RSpec.describe 'merchant dashboard' do
       after :each do
         expect(page).to have_content(@merchant.name)
         expect(page).to have_content("Email: #{@merchant.email}")
-        expect(page).to have_content("Address: #{@merchant.address}")
-        expect(page).to have_content("City: #{@merchant.city}")
-        expect(page).to have_content("State: #{@merchant.state}")
-        expect(page).to have_content("Zip: #{@merchant.zip}")
+        expect(page).to have_content("Address: #{@merchant.addresses.first.address}")
+        expect(page).to have_content("City: #{@merchant.addresses.first.city}")
+        expect(page).to have_content("State: #{@merchant.addresses.first.state}")
+        expect(page).to have_content("Zip: #{@merchant.addresses.first.zip}")
       end
     end
   end
@@ -46,10 +48,10 @@ RSpec.describe 'merchant dashboard' do
     it 'shows merchant information' do
       expect(page).to have_content(@merchant.name)
       expect(page).to have_content("Email: #{@merchant.email}")
-      expect(page).to have_content("Address: #{@merchant.address}")
-      expect(page).to have_content("City: #{@merchant.city}")
-      expect(page).to have_content("State: #{@merchant.state}")
-      expect(page).to have_content("Zip: #{@merchant.zip}")
+      expect(page).to have_content("Address: #{@merchant.addresses.first.address}")
+      expect(page).to have_content("City: #{@merchant.addresses.first.city}")
+      expect(page).to have_content("State: #{@merchant.addresses.first.state}")
+      expect(page).to have_content("Zip: #{@merchant.addresses.first.zip}")
     end
 
     it 'does not have a link to edit information' do

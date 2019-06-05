@@ -6,8 +6,11 @@ RSpec.describe 'merchant order show workflow' do
   describe 'as a merchant' do
     before :each do
       @merchant1 = create(:merchant)
+      a1 = create(:address, user: @merchant1)
       @merchant2 = create(:merchant)
+      a2 = create(:address, user: @merchant2)
       @user = create(:user)
+      a3 = create(:address, user: @user)
       @order = create(:order, user: @user)
       @item1 = create(:item, user: @merchant1, inventory: 2)
       @item2 = create(:item, user: @merchant2, inventory: 2)
@@ -32,7 +35,7 @@ RSpec.describe 'merchant order show workflow' do
         visit dashboard_order_path(@order)
 
         expect(page).to have_content("Customer Name: #{@user.name}")
-        expect(page).to have_content("Customer Address: #{@user.address} #{@user.city}, #{@user.state} #{@user.zip}")
+        expect(page).to have_content("Customer Address: #{@user.addresses.first.address} #{@user.addresses.first.city}, #{@user.addresses.first.state}, #{@user.addresses.first.zip}")
       end
 
       it 'shows item information for that merchant' do
@@ -90,9 +93,11 @@ RSpec.describe 'merchant order show workflow' do
       describe 'sets order as packaged if I am the last merchant to fulfill items' do
         before :each do
           user = create(:user)
+          a1 = create(:address, user: user)
           @admin = create(:admin)
-
+          a2 = create(:address, user: @admin)
           @merchant_1 = create(:merchant)
+          a3 = create(:address, user: @merchant_1)
           item_1 = create(:item, user: @merchant_1, inventory: 100)
           item_3 = create(:item, user: @merchant_1)
 
