@@ -39,8 +39,22 @@ RSpec.describe "Checking out" do
         click_on "Check Out"
       end 
       new_order = Order.last 
-save_and_open_page
+
       expect(new_order.address).to eq(a2)
+    end 
+  end
+  context "if user has no addresses" do 
+    it 'should see link to create address' do 
+
+      user = create(:user)
+
+      login_as(user)
+      visit cart_path
+
+      expect(page).to have_link("Create Address")
+      click_link "Create Address"
+
+      expect(current_path).to eq(new_profile_address_path(user))
     end 
   end 
   context "as a logged in regular user" do

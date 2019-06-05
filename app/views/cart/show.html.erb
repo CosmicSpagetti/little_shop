@@ -3,14 +3,20 @@
   <p>Your Cart is empty.</p>
 <% else %>
   <h3>Total: <%= number_to_currency(cart.total) %></h3>
+ 
+
   <% if current_user %>
+    <% if current_user.addresses.empty? %>
+      <%= link_to "Create Address", new_profile_address_path(current_user) %>
+    <% else %>
     <% current_user.addresses.each do |address| %>
-    <section id='address-<%= address.id %>'>
-    <p>Address: <%= address.nickname %>
-    <%= address.address %>
-    <%= address.state %>
-    <%= button_to "Check Out", profile_orders_path(address), method: :post %>
-    <% end %>
+      <section id='address-<%= address.id %>'>
+      <p>Address: <%= address.nickname %>
+      <%= address.address %>
+      <%= address.state %>
+      <%= button_to "Check Out", profile_orders_path(address), method: :post %>
+     <% end %>
+     <% end %>
   <% else %>
     <p>You must <%= link_to "register", registration_path %>
       or <%= link_to "log in", login_path %> to check out.</p>

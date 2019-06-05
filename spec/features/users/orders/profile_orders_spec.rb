@@ -13,7 +13,24 @@ RSpec.describe 'Profile Orders page', type: :feature do
     @item_1 = create(:item, user: @merchant_1)
     @item_2 = create(:item, user: @merchant_2)
   end
-
+  context 'as a user' do 
+    describe 'can change address' do 
+      it 'on pending orders page' do 
+        a1 = create(:address, user: @user, nickname: "BLAH")
+        a2 = create(:address, user: @user, nickname: "BLOOP")
+        o1 = create(:order, user: @user, address: a1)
+        o2 = create(:order, user: @user, address: a1)
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+        visit profile_order_path(o1)
+        expect(page).to have_content(a1.nickname)
+        expect(page).to have_button("Change Address")
+        click_button "Change Address"
+        expect(page).to have_content("YoU ChaNgeD yOur adDreSs!")
+        visit profile_order_path(o1)
+        expect(page).to have_content(a2.nickname)
+      end 
+    end 
+  end 
   context 'as a registered user' do
     describe 'should show a message when user no orders' do
       scenario 'when logged in as user' do
