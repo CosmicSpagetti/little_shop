@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20190603190901) do
     t.boolean "active", default: false
     t.decimal "price"
     t.text "description"
-    t.string "image"
+    t.string "image", default: "https://memegenerator.net/img/instances/80976711.jpg"
     t.integer "inventory"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

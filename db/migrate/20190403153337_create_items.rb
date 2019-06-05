@@ -5,7 +5,7 @@ class CreateItems < ActiveRecord::Migration[5.1]
       t.boolean :active, default: false
       t.decimal :price
       t.text :description
-      t.string :image
+      t.string :image, default: "https://memegenerator.net/img/instances/80976711.jpg"
       t.integer :inventory
 
       t.timestamps
