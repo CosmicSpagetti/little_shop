@@ -38,7 +38,6 @@ class Profile::AddressesController < ApplicationController
 
   def destroy
     address = Address.find(params[:id])
-    
     if address.check_orders == false
       address.orders.clear
       address.destroy

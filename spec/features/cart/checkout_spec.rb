@@ -21,7 +21,28 @@ RSpec.describe "Checking out" do
     visit item_path(@item_3)
     click_on "Add to Cart"
   end
+  context 'when you checkout as a user' do 
+    it 'should let you pick an address for the order' do 
+      user = create(:user)
+      a1 = create(:address, user: user)
+      a2 = create(:address, user: user)
 
+      login_as(user)
+      visit cart_path(user)
+
+      expect(page).to have_content(a1.nickname)
+      expect(page).to have_content(a1.address)
+      expect(page).to have_content(a2.nickname)
+      expect(page).to have_content(a2.address)
+
+      within "#address-#{a2.id}" do 
+        click_on "Check Out"
+      end 
+      new_order = Order.last 
+save_and_open_page
+      expect(new_order.address).to eq(a2)
+    end 
+  end 
   context "as a logged in regular user" do
     before :each do
       user = create(:user)
